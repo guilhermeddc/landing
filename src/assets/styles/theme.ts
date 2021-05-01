@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme } from "@material-ui/core";
 
 const theme = createMuiTheme({
   palette: {
@@ -8,9 +8,34 @@ const theme = createMuiTheme({
     secondary: {
       main: "#EF778D",
     },
-    // background: {
-    //   default: "#F4D079",
-    // },
+    background: {
+      default: "#F0F0F0",
+    },
+    text: {
+      primary: "#4D4D4D",
+    },
+  },
+  overrides: {
+    MuiTypography: {
+      h1: {
+        fontFamily: '"Paytone One", sans-serif;',
+      },
+      h2: {
+        fontFamily: '"Paytone One", sans-serif;',
+      },
+      h3: {
+        fontFamily: '"Paytone One", sans-serif;',
+      },
+      h4: {
+        fontFamily: '"Paytone One", sans-serif;',
+      },
+      h5: {
+        fontFamily: '"Paytone One", sans-serif;',
+      },
+      h6: {
+        fontFamily: '"Paytone One", sans-serif;',
+      },
+    },
   },
 });
 

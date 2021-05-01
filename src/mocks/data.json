@@ -1,0 +1,21 @@
+{
+  "logo": "",
+  "intro": "Queremos te conhecer.",
+  "survey_active": true,
+  "message": "Obrigado por participar da nossa pesquisa.",
+  "question": "Qual a probabilidade de você nos recomendar para um amigo ou colega?",
+  "comment_title": "Qual o principal motivo para sua nota?",
+  "extra_questions": [
+    {
+      "id": 1,
+      "order": 1,
+      "question": "O que motivou sua nota?"
+    },
+    {
+      "id": 2,
+      "order": 2,
+      "question": "O que podemos fazer para melhorar?"
+    }
+  ],
+  "final": "Obrigado."
+}

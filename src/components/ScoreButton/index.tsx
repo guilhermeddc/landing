@@ -1,5 +1,5 @@
-import React from "react";
-import { Button } from "@material-ui/core";
+import React, { useCallback } from "react";
+import { Button, Typography } from "@material-ui/core";
 
 interface IProps {
   value: number;
@@ -9,22 +9,22 @@ interface IProps {
 }
 
 const ScoreButton: React.FC<IProps> = ({ value, setValue, score, color }) => {
+  const handleClick = useCallback(() => setValue(score), [score, setValue]);
+
   return (
     <Button
-      variant={value === score ? "outlined" : "contained"}
-      onClick={() => setValue(score)}
+      variant="contained"
+      onClick={handleClick}
       style={{
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-        backgroundColor: color,
+        color: value === score ? color : "#FFFFFF",
+        backgroundColor: value === score ? "#FFFFFF" : color,
         width: 50,
-        height: 50,
-        borderWidth: 2.5,
+        height: 55,
         borderRadius: 8,
+        transition: "all 0.3s",
       }}
     >
-      {score}
+      <Typography variant="h4">{score}</Typography>
     </Button>
   );
 };
