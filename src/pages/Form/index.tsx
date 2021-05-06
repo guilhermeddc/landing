@@ -113,6 +113,7 @@ const Form: React.FC = () => {
               <Box marginBottom={3}>
                 <TextField
                   label="Celular"
+                  type="number"
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData(
