@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 
 import Form from '../pages/Form';
 import Feedback from '../pages/Feedback';
 import Finish from '../pages/Finish';
+import {AlertComponent} from '../components/Alert';
 
 const Routes: React.FC = () => {
   return (
@@ -15,6 +16,8 @@ const Routes: React.FC = () => {
 
         <Route path="*" component={() => <Redirect to="/" />} />
       </Switch>
+
+      <AlertComponent />
     </BrowserRouter>
   );
 };

@@ -1,18 +1,18 @@
-import { createMuiTheme } from "@material-ui/core";
+import {createMuiTheme} from '@material-ui/core';
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#91D683",
+      main: '#91D683',
     },
     secondary: {
-      main: "#EF778D",
+      main: '#EF778D',
     },
     background: {
-      default: "#F0F0F0",
+      default: '#F0F0F0',
     },
     text: {
-      primary: "#4D4D4D",
+      primary: '#4D4D4D',
     },
   },
   overrides: {

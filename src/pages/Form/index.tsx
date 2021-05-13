@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, {useCallback, useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import InputMask from 'react-input-mask';
 
 import {
   Box,
@@ -12,16 +13,18 @@ import {
   Checkbox,
   FormControlLabel,
   Link,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import mock from "../../mocks/data.json";
-import Logo from "../../assets/images/logo.png";
+import mock from '../../mocks/data.json';
+import Logo from '../../assets/images/logo.png';
+import {feedback} from '../../services/alertService';
 
 const Form: React.FC = () => {
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
+    name: '',
+    email: '',
+    phone: '',
     privacy: false,
   });
 
@@ -32,9 +35,29 @@ const Form: React.FC = () => {
     (e) => {
       e.preventDefault();
 
-      history.push("/feedback");
+      if (!formData.privacy) {
+        feedback('Leu e concordo com a Política de Privacidade?', 'info');
+        return;
+      }
+
+      if (!formData.name) {
+        setSubmitted(true);
+        return;
+      }
+
+      if (!formData.email && formData.phone.length === 0) {
+        setSubmitted(true);
+        return;
+      }
+
+      if (!formData.phone && formData.email.length === 0) {
+        setSubmitted(true);
+        return;
+      }
+
+      history.push('/feedback');
     },
-    [history]
+    [formData.email, formData.name, formData.phone, formData.privacy, history],
   );
 
   return (
@@ -42,9 +65,8 @@ const Form: React.FC = () => {
       minHeight="100vh"
       display="flex"
       alignItems="center"
-      justifyContent="center"
-    >
-      <Container maxWidth="md" style={{ marginTop: 16, marginBottom: 16 }}>
+      justifyContent="center">
+      <Container maxWidth="md" style={{marginTop: 16, marginBottom: 16}}>
         <form onSubmit={handleSubmit}>
           <Box
             display="flex"
@@ -54,8 +76,7 @@ const Form: React.FC = () => {
             flex={1}
             height="100%"
             padding="32px 32px 64px"
-            component={Paper}
-          >
+            component={Paper}>
             <img src={mock.logo || Logo} alt="logo" width="250px" />
 
             <Box
@@ -63,7 +84,7 @@ const Form: React.FC = () => {
               maxWidth="420px"
               height="1px"
               marginBottom={4}
-              style={{ backgroundColor: theme.palette.primary.main }}
+              style={{backgroundColor: theme.palette.primary.main}}
             />
 
             <Typography variant="h5" align="center">
@@ -73,18 +94,21 @@ const Form: React.FC = () => {
             <Box width="100%" maxWidth="420px" marginTop={4}>
               <Box marginBottom={3}>
                 <TextField
-                  label="Nome"
+                  label="Nome *"
                   value={formData.name}
+                  error={!formData.name && submitted}
+                  helperText={
+                    !formData.name && submitted && 'Campo obrigatório.'
+                  }
                   onChange={(e) =>
                     setFormData(
                       (state) =>
                         (state = {
                           ...state,
                           name: e.target.value,
-                        })
+                        }),
                     )
                   }
-                  required
                   multiline
                   fullWidth
                   variant="outlined"
@@ -94,6 +118,15 @@ const Form: React.FC = () => {
               <Box marginBottom={3}>
                 <TextField
                   label="E-mail"
+                  error={
+                    !formData.email && formData.phone.length === 0 && submitted
+                  }
+                  helperText={
+                    !formData.email &&
+                    formData.phone.length === 0 &&
+                    submitted &&
+                    'Preencha o e-mail ou celular.'
+                  }
                   value={formData.email}
                   onChange={(e) =>
                     setFormData(
@@ -101,7 +134,7 @@ const Form: React.FC = () => {
                         (state = {
                           ...state,
                           email: e.target.value,
-                        })
+                        }),
                     )
                   }
                   multiline
@@ -111,9 +144,8 @@ const Form: React.FC = () => {
               </Box>
 
               <Box marginBottom={3}>
-                <TextField
-                  label="Celular"
-                  type="number"
+                <InputMask
+                  mask="(99) 99999 9999"
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData(
@@ -121,19 +153,33 @@ const Form: React.FC = () => {
                         (state = {
                           ...state,
                           phone: e.target.value,
-                        })
+                        }),
                     )
-                  }
-                  multiline
-                  fullWidth
-                  variant="outlined"
-                />
+                  }>
+                  {() => (
+                    <TextField
+                      label="Celular"
+                      error={
+                        !formData.phone &&
+                        formData.email.length === 0 &&
+                        submitted
+                      }
+                      helperText={
+                        !formData.phone &&
+                        formData.email.length === 0 &&
+                        submitted &&
+                        'Preencha o e-mail ou celular.'
+                      }
+                      fullWidth
+                      variant="outlined"
+                    />
+                  )}
+                </InputMask>
               </Box>
 
               <FormControlLabel
                 control={
                   <Checkbox
-                    name="checkedB"
                     color="primary"
                     value={formData.privacy}
                     onChange={(e) =>
@@ -142,14 +188,14 @@ const Form: React.FC = () => {
                           (state = {
                             ...state,
                             privacy: e.target.checked,
-                          })
+                          }),
                       )
                     }
                   />
                 }
                 label={
                   <>
-                    Eu li e concordo com a{" "}
+                    Eu li e concordo com a{' '}
                     <Link href="/"> Política de Privacidade</Link>
                   </>
                 }
@@ -160,10 +206,8 @@ const Form: React.FC = () => {
                   variant="contained"
                   fullWidth
                   color="primary"
-                  style={{ color: "white" }}
-                  type="submit"
-                  disabled={formData.name.length === 0 || !formData.privacy}
-                >
+                  style={{color: 'white'}}
+                  type="submit">
                   <Typography variant="h6" align="center">
                     Enviar
                   </Typography>

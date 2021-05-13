@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import {
   Box,
@@ -7,12 +7,12 @@ import {
   Paper,
   Typography,
   IconButton,
-} from "@material-ui/core";
-import { Facebook, Instagram } from "@material-ui/icons";
+} from '@material-ui/core';
+import {Facebook, Instagram} from '@material-ui/icons';
 
-import mock from "../../mocks/data.json";
-import Logo from "../../assets/images/logo.png";
-import LogoHorizontal from "../../assets/images/logo_horizontal_black.png";
+import mock from '../../mocks/data.json';
+import Logo from '../../assets/images/logo.png';
+import LogoHorizontal from '../../assets/images/logo_horizontal_black.png';
 
 const Finish: React.FC = () => {
   const theme = useTheme();
@@ -22,9 +22,8 @@ const Finish: React.FC = () => {
       minHeight="100vh"
       display="flex"
       alignItems="center"
-      justifyContent="center"
-    >
-      <Container maxWidth="md" style={{ marginTop: 16, marginBottom: 16 }}>
+      justifyContent="center">
+      <Container maxWidth="md" style={{marginTop: 16, marginBottom: 16}}>
         <Box
           display="flex"
           flexDirection="column"
@@ -33,8 +32,7 @@ const Finish: React.FC = () => {
           flex={1}
           height="100%"
           padding="32px 32px 64px"
-          component={Paper}
-        >
+          component={Paper}>
           <img src={mock.logo || Logo} alt="logo" width="250px" />
 
           <Box
@@ -42,21 +40,19 @@ const Finish: React.FC = () => {
             maxWidth="420px"
             height="1px"
             marginBottom={4}
-            style={{ backgroundColor: theme.palette.primary.main }}
+            style={{backgroundColor: theme.palette.primary.main}}
           />
 
           <Typography variant="h4" align="center">
             {mock.final}
           </Typography>
-
         </Box>
 
         <Box
           display="flex"
           flexDirection="column"
           alignItems="center"
-          paddingY="32px"
-        >
+          paddingY="32px">
           <img src={LogoHorizontal} alt="logo horizontal" width="200px" />
 
           <Typography variant="subtitle2" align="center">

@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 
 import {
   Box,
@@ -9,14 +9,48 @@ import {
   TextField,
   Typography,
   useTheme,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import mock from "../../mocks/data.json";
-import Logo from "../../assets/images/logo.png";
-import ScoreButton from "../../components/ScoreButton";
+import mock from '../../mocks/data.json';
+import Logo from '../../assets/images/logo.png';
+import ScoreButton from '../../components/ScoreButton';
+
+interface IExtraQuestion {
+  id?: number;
+  question?: string;
+  response?: string;
+}
+interface IQuestions {
+  commentTitle: string;
+  questions: IExtraQuestion[];
+}
 
 const Feedback: React.FC = () => {
-  const [recommend, setRecommend] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [recommend, setRecommend] = useState(-1);
+
+  const [questions, setQuestions] = useState<IQuestions>({
+    commentTitle: '',
+    questions: [],
+  });
+  const [extraQuestions, setExtraQuestions] = useState<IExtraQuestion[]>([]);
+
+  useEffect(() => {
+    mock.extra_questions.map((item) =>
+      setExtraQuestions((state) => [
+        ...state,
+        {
+          id: item.id,
+          question: item.question,
+          response: '',
+        },
+      ]),
+    );
+  }, []);
+
+  useEffect(() => {
+    setQuestions((state) => (state = {...state, questions: extraQuestions}));
+  }, [extraQuestions]);
 
   const theme = useTheme();
   const history = useHistory();
@@ -25,9 +59,27 @@ const Feedback: React.FC = () => {
     (e) => {
       e.preventDefault();
 
-      history.push("/finish");
+      if (!questions.commentTitle) {
+        setSubmitted(true);
+        return;
+      }
+
+      history.push('/finish');
     },
-    [history]
+    [history, questions.commentTitle],
+  );
+
+  const handleChangeResponse = useCallback(
+    (event, index) =>
+      setExtraQuestions((state) => {
+        return state.map((oldState, oldStateIndex) => {
+          if (index === oldStateIndex) {
+            oldState.response = event.target.value;
+          }
+          return oldState;
+        });
+      }),
+    [],
   );
 
   return (
@@ -35,9 +87,8 @@ const Feedback: React.FC = () => {
       minHeight="100vh"
       display="flex"
       alignItems="center"
-      justifyContent="center"
-    >
-      <Container maxWidth="md" style={{ marginTop: 16, marginBottom: 16 }}>
+      justifyContent="center">
+      <Container maxWidth="md" style={{marginTop: 16, marginBottom: 16}}>
         <form onSubmit={handleSubmit}>
           <Box
             display="flex"
@@ -46,8 +97,7 @@ const Feedback: React.FC = () => {
             alignItems="center"
             height="100%"
             padding="32px 32px 64px"
-            component={Paper}
-          >
+            component={Paper}>
             <img src={mock.logo || Logo} alt="logo" width="250px" />
 
             <Box
@@ -55,7 +105,7 @@ const Feedback: React.FC = () => {
               maxWidth="420px"
               height="1px"
               marginBottom={4}
-              style={{ backgroundColor: theme.palette.primary.main }}
+              style={{backgroundColor: theme.palette.primary.main}}
             />
 
             <Typography variant="h6" align="center">
@@ -67,8 +117,7 @@ const Feedback: React.FC = () => {
               justifyContent="center"
               gridGap="8px"
               flexWrap="wrap"
-              marginY="32px"
-            >
+              marginY="32px">
               <ScoreButton
                 value={recommend}
                 setValue={setRecommend}
@@ -137,61 +186,74 @@ const Feedback: React.FC = () => {
               />
             </Box>
 
-            <Typography variant="h6" align="center">
-              {mock.comment_title}
-            </Typography>
-
-            <Box width="100%" maxWidth="420px" marginTop={3}>
-              <TextField
-                multiline
-                fullWidth
-                variant="outlined"
-                required
-                InputProps={{
-                  style: {
-                    minHeight: theme.spacing(16),
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "flex-start",
-                  },
-                }}
-              />
-            </Box>
-
-            <Box width="100%" maxWidth="420px" marginTop={3}>
-              {mock.extra_questions.length > 0 && (
+            {recommend > -1 && recommend < 11 && (
+              <>
                 <Typography variant="h6" align="center">
-                  Outras questões:
+                  {mock.comment_title}
                 </Typography>
-              )}
 
-              {mock.extra_questions.length > 0 &&
-                mock.extra_questions.map((item) => (
-                  <Box marginTop={3} key={item.id}>
-                    <TextField
-                      label={item.question}
-                      multiline
-                      required
+                <Box width="100%" maxWidth="420px" marginTop={3}>
+                  <TextField
+                    multiline
+                    fullWidth
+                    variant="outlined"
+                    value={questions.commentTitle}
+                    error={!questions.commentTitle && submitted}
+                    helperText={
+                      !questions.commentTitle &&
+                      submitted &&
+                      'Campo obrigatório.'
+                    }
+                    onChange={(e) =>
+                      setQuestions(
+                        (state) =>
+                          (state = {
+                            ...state,
+                            commentTitle: e.target.value,
+                          }),
+                      )
+                    }
+                    InputProps={{
+                      style: {
+                        minHeight: theme.spacing(16),
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-start',
+                      },
+                    }}
+                  />
+                </Box>
+
+                <Box width="100%" maxWidth="420px">
+                  {mock.extra_questions.length > 0 &&
+                    mock.extra_questions.map((item, index) => (
+                      <Box marginTop={3} key={item.id}>
+                        <TextField
+                          label={item.question}
+                          value={extraQuestions[index].response}
+                          onChange={(e) => handleChangeResponse(e, index)}
+                          multiline
+                          fullWidth
+                          variant="outlined"
+                        />
+                      </Box>
+                    ))}
+
+                  <Box display="flex" justifyContent="flex-end" marginTop={3}>
+                    <Button
                       fullWidth
-                      variant="outlined"
-                    />
+                      variant="contained"
+                      color="primary"
+                      style={{color: 'white'}}
+                      type="submit">
+                      <Typography variant="h6" align="center">
+                        Salvar
+                      </Typography>
+                    </Button>
                   </Box>
-                ))}
-
-              <Box display="flex" justifyContent="flex-end" marginTop={3}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  style={{ color: "white" }}
-                  type="submit"
-                >
-                  <Typography variant="h6" align="center">
-                    Salvar
-                  </Typography>
-                </Button>
-              </Box>
-            </Box>
+                </Box>
+              </>
+            )}
           </Box>
         </form>
       </Container>
