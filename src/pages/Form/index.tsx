@@ -146,6 +146,7 @@ const Form: React.FC = () => {
               <Box marginBottom={3}>
                 <InputMask
                   mask="(99) 99999 9999"
+                  type="tel"
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData(
@@ -158,6 +159,7 @@ const Form: React.FC = () => {
                   }>
                   {() => (
                     <TextField
+                      type="tel"
                       label="Celular"
                       error={
                         !formData.phone &&
