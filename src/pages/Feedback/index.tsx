@@ -192,7 +192,7 @@ const Feedback: React.FC = () => {
                   {mock.comment_title}
                 </Typography>
 
-                <Box width="100%" maxWidth="420px" marginTop={3}>
+                <Box width="100%" maxWidth="420px" marginTop={2}>
                   <TextField
                     multiline
                     fullWidth
@@ -228,8 +228,11 @@ const Feedback: React.FC = () => {
                   {mock.extra_questions.length > 0 &&
                     mock.extra_questions.map((item, index) => (
                       <Box marginTop={3} key={item.id}>
+                        <Typography variant="h6" align="center">
+                          {item.question}
+                        </Typography>
+                        <Box marginTop={2} />
                         <TextField
-                          label={item.question}
                           value={extraQuestions[index].response}
                           onChange={(e) => handleChangeResponse(e, index)}
                           multiline
@@ -239,7 +242,7 @@ const Feedback: React.FC = () => {
                       </Box>
                     ))}
 
-                  <Box display="flex" justifyContent="flex-end" marginTop={3}>
+                  <Box display="flex" justifyContent="flex-end" marginTop={4}>
                     <Button
                       fullWidth
                       variant="contained"
