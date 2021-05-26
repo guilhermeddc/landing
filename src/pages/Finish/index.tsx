@@ -19,7 +19,7 @@ const Finish: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <Fade in={true} timeout={500}>
+    <Fade in timeout={500}>
       <Box
         minHeight="100vh"
         display="flex"
@@ -50,35 +50,37 @@ const Finish: React.FC = () => {
             </Typography>
           </Box>
 
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            paddingY="32px">
-            <img src={LogoHorizontal} alt="logo horizontal" width="200px" />
+          <Fade in timeout={1000}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              paddingY="32px">
+              <img src={LogoHorizontal} alt="logo horizontal" width="200px" />
 
-            <Typography variant="subtitle2" align="center">
-              Ei, você curtiu essa pesquisa?
-            </Typography>
-            <Typography variant="subtitle2" align="center">
-              Seu negócio também precisa dela!
-            </Typography>
-            <Typography variant="subtitle2" align="center">
-              Conheça a OnlyAsk e teste grátis por 7 dias agora mesmo!
-            </Typography>
-            <Typography variant="subtitle2" align="center">
-              contato@onlyask.me | (54) 3286.6622
-            </Typography>
+              <Typography variant="subtitle2" align="center">
+                Ei, você curtiu essa pesquisa?
+              </Typography>
+              <Typography variant="subtitle2" align="center">
+                Seu negócio também precisa dela!
+              </Typography>
+              <Typography variant="subtitle2" align="center">
+                Conheça a OnlyAsk e teste grátis por 7 dias agora mesmo!
+              </Typography>
+              <Typography variant="subtitle2" align="center">
+                contato@onlyask.me | (54) 3286.6622
+              </Typography>
 
-            <Box display="flex" justifyContent="center">
-              <IconButton color="primary">
-                <Facebook />
-              </IconButton>
-              <IconButton color="primary">
-                <Instagram />
-              </IconButton>
+              <Box display="flex" justifyContent="center">
+                <IconButton color="primary">
+                  <Facebook />
+                </IconButton>
+                <IconButton color="primary">
+                  <Instagram />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
+          </Fade>
         </Container>
       </Box>
     </Fade>

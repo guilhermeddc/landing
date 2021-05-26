@@ -84,7 +84,7 @@ const Feedback: React.FC = () => {
   );
 
   return (
-    <Fade in={true} timeout={500}>
+    <Fade in timeout={500}>
       <Box
         minHeight="100vh"
         display="flex"

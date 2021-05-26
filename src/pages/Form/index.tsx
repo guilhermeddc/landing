@@ -32,6 +32,10 @@ const Form: React.FC = () => {
   const theme = useTheme();
   const history = useHistory();
 
+  const handleValidateMail = useCallback(() => {
+    return !/\S+@\S+\.\S+/.test(formData.email) && formData.email.length > 0;
+  }, [formData.email]);
+
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -56,13 +60,28 @@ const Form: React.FC = () => {
         return;
       }
 
+      if (handleValidateMail()) {
+        feedback('Preencha um e-mail valido.', 'warning');
+        setSubmitted(true);
+        return;
+      }
+
       history.push('/feedback');
     },
-    [formData.email, formData.name, formData.phone, formData.privacy, history],
+    [
+      formData.email,
+      formData.name,
+      formData.phone,
+      formData.privacy,
+      handleValidateMail,
+      history,
+    ],
   );
 
+  console.log(handleValidateMail());
+
   return (
-    <Fade in={true} timeout={500}>
+    <Fade in timeout={500}>
       <Box
         minHeight="100vh"
         display="flex"
@@ -96,7 +115,7 @@ const Form: React.FC = () => {
               <Box width="100%" maxWidth="420px" marginTop={4}>
                 <Box marginBottom={3}>
                   <TextField
-                    label="Nome *"
+                    label="Nome"
                     value={formData.name}
                     error={!formData.name && submitted}
                     helperText={
@@ -111,7 +130,6 @@ const Form: React.FC = () => {
                           }),
                       )
                     }
-                    multiline
                     fullWidth
                     variant="outlined"
                   />
@@ -120,16 +138,24 @@ const Form: React.FC = () => {
                 <Box marginBottom={3}>
                   <TextField
                     label="E-mail"
-                    error={
+                    type="mail"
+                    required={
                       !formData.email &&
                       formData.phone.length === 0 &&
                       submitted
                     }
+                    error={
+                      handleValidateMail() ||
+                      (!formData.email &&
+                        formData.phone.length === 0 &&
+                        submitted)
+                    }
                     helperText={
                       !formData.email &&
                       formData.phone.length === 0 &&
-                      submitted &&
-                      'Preencha o e-mail ou celular.'
+                      submitted
+                        ? 'Preencha o e-mail ou celular.'
+                        : handleValidateMail() && 'Preencha um e-mail valido.'
                     }
                     value={formData.email}
                     onChange={(e) =>
@@ -141,7 +167,6 @@ const Form: React.FC = () => {
                           }),
                       )
                     }
-                    multiline
                     fullWidth
                     variant="outlined"
                   />
@@ -165,6 +190,11 @@ const Form: React.FC = () => {
                       <TextField
                         type="tel"
                         label="Celular"
+                        required={
+                          !formData.phone &&
+                          formData.email.length === 0 &&
+                          submitted
+                        }
                         error={
                           !formData.phone &&
                           formData.email.length === 0 &&
